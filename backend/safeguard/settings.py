@@ -76,7 +76,7 @@ WSGI_APPLICATION = 'safeguard.wsgi.application'
 import mongoengine
 
 MONGODB_SETTINGS = {
-    'host': config('MONGODB_URI', default='mongodb://localhost:27017/safeguard'),
+    'host': config('MONGODB_URI', default='mongodb+srv://jarnilp:jarnilwomensafety@cluster0.zsfopbq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'),
     'connect': False,
 }
 
