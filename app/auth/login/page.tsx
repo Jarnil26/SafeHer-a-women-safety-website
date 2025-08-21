@@ -36,7 +36,7 @@ export default function LoginPage() {
     if (success) {
       toast({
         title: "Login successful",
-        description: "Welcome back to SafeGuard!",
+        description: "Welcome back to SafeHer!",
       })
       router.push("/dashboard")
     } else {
@@ -82,7 +82,7 @@ export default function LoginPage() {
           <CardTitle className="text-3xl bg-gradient-to-r from-teal-600 to-purple-600 bg-clip-text text-transparent">
             Welcome Back
           </CardTitle>
-          <CardDescription className="text-navy-600 text-lg">Sign in to your SafeGuard account</CardDescription>
+          <CardDescription className="text-navy-600 text-lg">Sign in to your SafeHer account</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
