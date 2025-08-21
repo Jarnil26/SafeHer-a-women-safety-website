@@ -42,7 +42,7 @@ export function LandingPage() {
     {
       name: "Sarah Johnson",
       role: "University Student",
-      content: "SafeGuard gives me confidence when walking alone at night. The SOS feature is incredibly reassuring.",
+      content: "SafeHer gives me confidence when walking alone at night. The SOS feature is incredibly reassuring.",
       rating: 5,
     },
     {
@@ -69,7 +69,7 @@ export function LandingPage() {
               <Shield className="h-5 w-5 text-white" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-teal-600 to-purple-600 bg-clip-text text-transparent">
-              SafeGuard
+              SafeHer
             </span>
           </div>
 
@@ -211,7 +211,7 @@ export function LandingPage() {
           <div className="max-w-3xl mx-auto text-white">
             <h2 className="text-4xl font-bold mb-6">Ready to Take Control of Your Safety?</h2>
             <p className="text-xl mb-8 opacity-90">
-              Join thousands of women who trust SafeGuard for their daily safety needs.
+              Join thousands of women who trust SafeHer for their daily safety needs.
             </p>
             <Link href="/auth/register">
               <Button
@@ -235,7 +235,7 @@ export function LandingPage() {
                 <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-purple-600 rounded-lg flex items-center justify-center">
                   <Shield className="h-5 w-5 text-white" />
                 </div>
-                <span className="text-xl font-bold">SafeGuard</span>
+                <span className="text-xl font-bold">SafeHer</span>
               </div>
               <p className="text-slate-400">Empowering women through technology and community support.</p>
             </div>
@@ -276,7 +276,7 @@ export function LandingPage() {
           </div>
 
           <div className="border-t border-slate-800 mt-8 pt-8 text-center text-slate-400">
-            <p>&copy; 2024 SafeGuard. All rights reserved. Built with care for women's safety.</p>
+            <p>&copy; 2025 SafeHer. All rights reserved. Built with care for women's safety.</p>
           </div>
         </div>
       </footer>
