@@ -8,6 +8,7 @@ urlpatterns = [
     path('sos/<str:alert_id>/respond/', views.respond_to_sos, name='respond_to_sos'),
     path('sos/<str:alert_id>/resolve/', views.resolve_sos_alert, name='resolve_sos_alert'),
     path('reports/create/', views.create_incident_report, name='create_incident_report'),
+    path('reports/', views.list_incident_reports, name='list_incident_reports'),
     path('map-data/', views.get_map_data, name='get_map_data'),
     path('stats/', views.get_safety_stats, name='get_safety_stats'),
 ]

@@ -22,9 +22,6 @@ yarn-error.log*
 # vercel
 .vercel
 
-#python venv
-env/
-
 # typescript
 *.tsbuildinfo
 next-env.d.ts

@@ -11,6 +11,7 @@ import { AlertTriangle, MapPin, Clock, Eye, Search, FileText } from "lucide-reac
 import { DashboardLayout } from "@/components/dashboard/dashboard-layout"
 import { SafetyMap } from "@/components/maps/safety-map"
 import { useToast } from "@/hooks/use-toast"
+import { apiClient } from "@/lib/api" // Import your API client
 
 interface IncidentReport {
   id: string
@@ -36,52 +37,17 @@ export default function ReportsPage() {
   const { toast } = useToast()
 
   useEffect(() => {
-    // Load incident reports from API
-    const loadReports = async () => {
+    async function loadReports() {
+      setLoading(true)
       try {
-        // Mock data for now - replace with actual API call
-        const mockReports: IncidentReport[] = [
-          {
-            id: "1",
-            incident_type: "harassment",
-            severity: "high",
-            latitude: 40.7128,
-            longitude: -74.006,
-            address: "Downtown Plaza",
-            description: "Verbal harassment near the subway entrance",
-            status: "pending",
-            created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-            is_anonymous: false,
-          },
-          {
-            id: "2",
-            incident_type: "suspicious-activity",
-            severity: "medium",
-            latitude: 40.7589,
-            longitude: -73.9851,
-            address: "Central Park",
-            description: "Suspicious individual following people",
-            status: "investigating",
-            created_at: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
-            is_anonymous: true,
-          },
-          {
-            id: "3",
-            incident_type: "poor-lighting",
-            severity: "low",
-            latitude: 40.7505,
-            longitude: -73.9934,
-            address: "Park Avenue",
-            description: "Street lights not working, area feels unsafe",
-            status: "resolved",
-            created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-            is_anonymous: false,
-          },
-        ]
-        setReports(mockReports)
-        setFilteredReports(mockReports)
+        const res = await apiClient.getIncidentReports()
+        if (res.success && res.data) {
+          setReports(res.data)
+          setFilteredReports(res.data)
+        } else {
+          throw new Error(res.error || "Failed to load incident reports")
+        }
       } catch (error) {
-        console.error("Failed to load reports:", error)
         toast({
           title: "Load Error",
           description: "Failed to load incident reports. Please refresh the page.",
@@ -91,37 +57,35 @@ export default function ReportsPage() {
         setLoading(false)
       }
     }
-
     loadReports()
   }, [toast])
 
   useEffect(() => {
-    // Filter reports based on search, status, and type
     let filtered = reports
 
     if (searchQuery) {
+      const q = searchQuery.toLowerCase()
       filtered = filtered.filter(
         (report) =>
-          report.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          report.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          report.incident_type.toLowerCase().includes(searchQuery.toLowerCase()),
+          report.address.toLowerCase().includes(q) ||
+          report.description.toLowerCase().includes(q) ||
+          report.incident_type.toLowerCase().includes(q)
       )
     }
-
     if (statusFilter !== "all") {
       filtered = filtered.filter((report) => report.status === statusFilter)
     }
-
     if (typeFilter !== "all") {
       filtered = filtered.filter((report) => report.incident_type === typeFilter)
     }
-
     setFilteredReports(filtered)
   }, [reports, searchQuery, statusFilter, typeFilter])
 
   const handleStartInvestigation = (reportId: string) => {
     setReports((prev) =>
-      prev.map((report) => (report.id === reportId ? { ...report, status: "investigating" as const } : report)),
+      prev.map((report) =>
+        report.id === reportId ? { ...report, status: "investigating" as const } : report
+      )
     )
     toast({
       title: "Investigation Started",
@@ -132,7 +96,9 @@ export default function ReportsPage() {
 
   const handleMarkResolved = (reportId: string) => {
     setReports((prev) =>
-      prev.map((report) => (report.id === reportId ? { ...report, status: "resolved" as const } : report)),
+      prev.map((report) =>
+        report.id === reportId ? { ...report, status: "resolved" as const } : report
+      )
     )
     toast({
       title: "Report Resolved",

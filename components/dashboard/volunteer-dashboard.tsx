@@ -51,57 +51,55 @@ export function VolunteerDashboard() {
     window.location.href = "/map";
   };
 
-const handleRespondToAlert = async (alertId: string) => {
-  try {
-    const response = await apiClient.respondToSOSAlert(alertId);
-    if (response.success) {
-      setSOSAlerts((prev) =>
-        prev.map((alert) =>
-          alert.id === alertId
-            ? { ...alert, status: "responded" as const }
-            : alert
-        )
-      );
-      setActiveResponses((prev) => prev + 1);
-      toast({
-        title: "Response Sent",
-        description: "You're now responding to this emergency alert",
-      });
-    } else {
-      toast({ title: "Failed to respond", description: response.error });
+  const handleRespondToAlert = async (alertId: string) => {
+    try {
+      const response = await apiClient.respondToSOSAlert(alertId);
+      if (response.success) {
+        setSOSAlerts((prev) =>
+          prev.map((alert) =>
+            alert.id === alertId
+              ? { ...alert, status: "responded" as const }
+              : alert
+          )
+        );
+        setActiveResponses((prev) => prev + 1);
+        toast({
+          title: "Response Sent",
+          description: "You're now responding to this emergency alert",
+        });
+      } else {
+        toast({ title: "Failed to respond", description: response.error });
+      }
+    } catch (err) {
+      console.error("Respond error:", err);
+      toast({ title: "Error", description: "Unable to respond to alert." });
     }
-  } catch (err) {
-    console.error("Respond error:", err);
-    toast({ title: "Error", description: "Unable to respond to alert." });
-  }
-};
+  };
 
-
-const handleResolveAlert = async (alertId: string) => {
-  try {
-    const response = await apiClient.resolveSOSAlert(alertId);
-    if (response.success) {
-      setSOSAlerts((prev) =>
-        prev.map((alert) =>
-          alert.id === alertId
-            ? { ...alert, status: "resolved" as const }
-            : alert
-        )
-      );
-      setTotalHelped((prev) => prev + 1);
-      toast({
-        title: "Alert Resolved",
-        description: "Thank you for helping keep our community safe!",
-      });
-    } else {
-      toast({ title: "Failed to resolve", description: response.error });
-    }
-  } catch (err) {
-    console.error("Resolve error:", err);
-    toast({ title: "Error", description: "Unable to resolve alert." });
-  }
-};
-
+  // const handleResolveAlert = async (alertId: string) => {
+  //   try {
+  //     const response = await apiClient.resolveSOSAlert(alertId);
+  //     if (response.success) {
+  //       setSOSAlerts((prev) =>
+  //         prev.map((alert) =>
+  //           alert.id === alertId
+  //             ? { ...alert, status: "resolved" as const }
+  //             : alert
+  //         )
+  //       );
+  //       setTotalHelped((prev) => prev + 1);
+  //       toast({
+  //         title: "Alert Resolved",
+  //         description: "Thank you for helping keep our community safe!",
+  //       });
+  //     } else {
+  //       toast({ title: "Failed to resolve", description: response.error });
+  //     }
+  //   } catch (err) {
+  //     console.error("Resolve error:", err);
+  //     toast({ title: "Error", description: "Unable to resolve alert." });
+  //   }
+  // };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -129,37 +127,38 @@ const handleResolveAlert = async (alertId: string) => {
     }
   };
   useEffect(() => {
-const fetchSOSAlerts = async () => {
-  try {
-    const response = await apiClient.getSOSAlerts();
+    const fetchSOSAlerts = async () => {
+      try {
+        const response = await apiClient.getSOSAlerts();
 
-    if (
-      response.success &&
-      response.data &&
-      Array.isArray(response.data.alerts)
-    ) {
-      const formattedData = response.data.alerts.map((alert: any) => ({
-        id:
-          alert.id ||
-          alert._id ||
-          alert._id?.$oid ||
-          Math.random().toString(),
-        userName: alert.user_name || "Anonymous",
-        location: alert.address || "Unknown Location",
-        timestamp: alert.created_at || "Just now",
-        status: alert.status || "active",
-        priority: alert.priority || "medium",
-      }));
-      setSOSAlerts(formattedData);
-    } else {
-      console.error("Failed to fetch SOS alerts: Unexpected response", response);
-    }
-  } catch (err) {
-    console.error("Error fetching SOS alerts:", err);
-  }
-};
-
-
+        if (
+          response.success &&
+          response.data &&
+          Array.isArray(response.data.alerts)
+        ) {
+          const formattedData = response.data.alerts.map((alert: any) => ({
+            id:
+              alert.id ||
+              alert._id ||
+              alert._id?.$oid ||
+              Math.random().toString(),
+            userName: alert.user_name || "Anonymous",
+            location: alert.address || "Unknown Location",
+            timestamp: alert.created_at || "Just now",
+            status: alert.status || "active",
+            priority: alert.priority || "medium",
+          }));
+          setSOSAlerts(formattedData);
+        } else {
+          console.error(
+            "Failed to fetch SOS alerts: Unexpected response",
+            response
+          );
+        }
+      } catch (err) {
+        console.error("Error fetching SOS alerts:", err);
+      }
+    };
 
     fetchSOSAlerts();
     const interval = setInterval(fetchSOSAlerts, 10000); // refresh every 10s
@@ -327,7 +326,7 @@ const fetchSOSAlerts = async () => {
                           Respond
                         </Button>
                       )}
-                      {alert.status === "responded" && (
+                      {/* {alert.status === "responded" && (
                         <Button
                           size="sm"
                           variant="outline"
@@ -336,7 +335,11 @@ const fetchSOSAlerts = async () => {
                         >
                           Mark Resolved
                         </Button>
+                      )} */}
+                      {alert.status === "responded" && (
+                        <Badge variant="secondary">Responding</Badge>
                       )}
+          
                       <Button
                         size="sm"
                         variant="outline"

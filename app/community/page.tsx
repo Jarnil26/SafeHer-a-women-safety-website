@@ -1,11 +1,12 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState, useEffect } from "react"
 import { AlertTriangle, Plus, Users, MessageCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
-import { toast } from "@/components/ui/use-toast"
+import { useToast } from "@/components/ui/use-toast"
+import { apiClient } from "@/lib/api" // Your centralized API client
 
 interface Post {
   id: string
@@ -22,71 +23,64 @@ export default function CommunityPage() {
   const [newPost, setNewPost] = useState("")
   const [isPosting, setIsPosting] = useState(false)
   const [loading, setLoading] = useState(true)
+  const { toast } = useToast()
 
   const fetchPosts = async () => {
-    try {
-      const res = await fetch("http://localhost:8000/api/community/posts/", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      })
-      if (!res.ok) throw new Error("Unauthorized or Failed")
+  setLoading(true)
+  try {
+    const res = await apiClient.getCommunityPosts()
+    if (!res.success || !res.data) throw new Error(res.error || "Failed to load posts")
 
-      const data = await res.json()
-      setPosts(data.posts)
-    } catch (err) {
-      toast({
-        title: "Error fetching posts",
-        description: "Please login or check your server",
-        variant: "destructive",
-      })
-    } finally {
-      setLoading(false)
-    }
+    // Use posts array under res.data.posts
+    const postsData = Array.isArray(res.data.posts) ? res.data.posts : []
+    setPosts(postsData)
+
+  } catch (error) {
+    toast({
+      title: "Error fetching posts",
+      description: "Please login or check your server",
+      variant: "destructive",
+    })
+  } finally {
+    setLoading(false)
   }
+}
+
 
   useEffect(() => {
     fetchPosts()
   }, [])
 
   const createPost = async () => {
-    if (!newPost.trim()) return
+  if (!newPost.trim()) return
 
-    setIsPosting(true)
+  setIsPosting(true)
+  try {
+    const res = await apiClient.createCommunityPost({
+      content: newPost,
+      category: "discussion",
+    })
 
-    try {
-      const res = await fetch("http://localhost:8000/api/community/posts/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-        body: JSON.stringify({
-          content: newPost,
-        }),
-      })
+    if (!res.success || !res.data?.post) throw new Error(res.error || "Failed to post")
 
-      if (!res.ok) throw new Error("Failed to post")
-
-      const data = await res.json()
-      setPosts((prev) => [data.post, ...prev])
-      setNewPost("")
-
-      toast({
-        title: "Post Created",
-        description: "Your post was shared successfully!",
-        className: "border-purple-200 bg-purple-50 text-purple-800",
-      })
-    } catch (err) {
-      toast({
-        title: "Failed to Post",
-        description: "Try again later or check your auth",
-        variant: "destructive",
-      })
-    } finally {
-      setIsPosting(false)
-    }
+    setPosts((prev) => [res.data.post, ...prev])
+    setNewPost("")
+    toast({
+      title: "Post Created",
+      description: "Your post was shared successfully!",
+      className: "border-purple-200 bg-purple-50 text-purple-800",
+    })
+  } catch (error) {
+    toast({
+      title: "Failed to Post",
+      description: "Try again later or check your auth",
+      variant: "destructive",
+    })
+  } finally {
+    setIsPosting(false)
   }
+}
+
 
   const handleReportIncident = () => {
     window.location.href = "/report"

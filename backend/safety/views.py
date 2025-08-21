@@ -204,6 +204,18 @@ def create_incident_report(request):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+# List all incident reports
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_incident_reports(request):
+    try:
+        # Simple list all active incident reports sorted by creation date descending
+        reports = IncidentReport.objects.order_by('-created_at')
+        reports_list = [r.to_dict() for r in reports]
+        return Response(reports_list)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_map_data(request):

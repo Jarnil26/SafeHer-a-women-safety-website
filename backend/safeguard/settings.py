@@ -13,7 +13,7 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-your-secret-key-here'
 DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = ['*']
-CORS_ALLOW_ALL_ORIGINS = True
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -76,7 +76,7 @@ WSGI_APPLICATION = 'safeguard.wsgi.application'
 import mongoengine
 
 MONGODB_SETTINGS = {
-    'host': config('MONGODB_URI', default='mongodb+srv://jarnilp:jarnilD1012@cluster0.zsfopbq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'),
+    'host': config('MONGODB_URI', default='mongodb://localhost:27017/safeguard'),
     'connect': False,
 }
 
@@ -115,12 +115,11 @@ SIMPLE_JWT = {
 }
 
 # CORS Configuration
-CORS_ALLOWED_ORIGINS = [
+CORS_ALLOWED_ORIGINS = [        
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "https://safehernow.vercel.app",
 ]
-    
 
 CORS_ALLOW_CREDENTIALS = True
 

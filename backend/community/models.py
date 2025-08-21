@@ -1,4 +1,4 @@
-from mongoengine import Document, StringField, DateTimeField, BooleanField, IntField, ListField
+from mongoengine import Document, StringField, DateTimeField, BooleanField, IntField, ListField,FloatField
 from datetime import datetime
 
 class CommunityPost(Document):
@@ -123,3 +123,22 @@ class Announcement(Document):
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'updated_at': self.updated_at.isoformat() if self.updated_at else None,
         }
+
+class IncidentReport(Document):
+    incident_type = StringField(required=True)
+    severity = StringField(choices=[("low", "Low"), ("medium", "Medium"), ("high", "High")], default="low")
+    latitude = FloatField(required=True)
+    longitude = FloatField(required=True)
+    address = StringField(required=True)
+    description = StringField(required=True)
+    status = StringField(choices=[("pending", "Pending"), ("investigating", "Investigating"), ("resolved", "Resolved")], default="pending")
+    user_id = StringField()
+    is_anonymous = BooleanField(default=False)
+    created_at = DateTimeField(default=datetime.utcnow)
+
+    meta = {
+        'collection': 'incident_reports',
+        'indexes': [
+            'incident_type', 'status', 'created_at'
+        ]
+    }

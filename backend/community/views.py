@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from datetime import datetime, timedelta
-from .models import CommunityPost, Comment, Announcement
+from .models import CommunityPost, Comment, Announcement , IncidentReport
 from accounts.models import User
 
 @api_view(['GET', 'POST'])
@@ -249,3 +249,39 @@ def community_stats(request):
     
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+# Incident Reporting Endpoints
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+def incident_reports(request):
+    user = request.user
+    if request.method == "GET":
+        reports = IncidentReport.objects()
+        return Response([report.to_mongo().to_dict() for report in reports])
+    elif request.method == "POST":
+        data = request.data
+        report = IncidentReport(
+            incident_type=data.get('incident_type'),
+            severity=data.get('severity', 'low'),
+            latitude=data.get('latitude'),
+            longitude=data.get('longitude'),
+            address=data.get('address'),
+            description=data.get('description'),
+            status='pending',
+            user_id=str(user.id),
+            is_anonymous=data.get('is_anonymous', False)
+        )
+        report.save()
+        return Response(report.to_mongo().to_dict(), status=201)
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def update_report_status(request, report_id):
+    status = request.data.get('status')
+    report = IncidentReport.objects(id=report_id).first()
+    if not report:
+        return Response({"error": "Not found"}, status=404)
+    report.status = status
+    report.save()
+    return Response(report.to_mongo().to_dict())

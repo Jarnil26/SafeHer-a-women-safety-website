@@ -7,4 +7,7 @@ urlpatterns = [
     path('posts/<str:post_id>/comments/', views.post_comments, name='post_comments'),
     path('announcements/', views.announcements, name='announcements'),
     path('stats/', views.community_stats, name='community_stats'),
+    path('incidents/', views.incident_reports, name='incident_reports'),
+    path('incidents/<report_id>/status/', views.update_report_status, name='update_report_status'),
+
 ]

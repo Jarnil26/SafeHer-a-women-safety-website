@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://safehernow.onrender.com/api"
 
 // API Response types
 interface ApiResponse<T = any> {
@@ -196,23 +196,24 @@ async getSafetyStats(): Promise<ApiResponse<any>> {
 
 
   // Incident Report APIs
-  async createIncidentReport(reportData: {
-    incident_type: string
-    severity: string
-    latitude: number
-    longitude: number
-    description: string
-    incident_time: string
-    is_anonymous?: boolean
-  }): Promise<ApiResponse<any>> {
-    return this.request("/safety/incident-reports/", {
-      method: "POST",
-      body: JSON.stringify(reportData),
-    })
-  }
+async createIncidentReport(reportData: {
+  incident_type: string
+  severity: string
+  description: string
+  incident_time: string
+  is_anonymous?: boolean
+  latitude?: number    // made optional
+  longitude?: number   // made optional
+}): Promise<ApiResponse<any>> {
+  return this.request("/safety/reports/create/", {
+    method: "POST",
+    body: JSON.stringify(reportData),
+  })
+}
+
 
   async getIncidentReports(): Promise<ApiResponse<any[]>> {
-    return this.request("/safety/incident-reports/")
+    return this.request("/safety/reports/")
   }
 
   // Map Data APIs
