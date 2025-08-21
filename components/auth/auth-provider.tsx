@@ -153,7 +153,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         toast({
           title: "Registration Successful",
-          description: `Welcome to SafeGuard, ${response.data.user.name}!`,
+          description: `Welcome to SafeHer, ${response.data.user.name}!`,
         })
 
         router.push("/dashboard")
