@@ -84,7 +84,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="flex items-center space-x-2 px-4 py-2">
             <Shield className="h-8 w-8 text-teal-600" />
             <span className="text-xl font-bold bg-gradient-to-r from-teal-600 to-turquoise-600 bg-clip-text text-transparent">
-              SafeGuard
+              SafeHer
             </span>
           </div>
         </SidebarHeader>
