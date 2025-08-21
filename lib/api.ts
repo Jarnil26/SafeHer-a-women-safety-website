@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://safehernow.onrender.com/api"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://safeher-a-women-safety-website-5.onrender.com/api"
 
 // API Response types
 interface ApiResponse<T = any> {
