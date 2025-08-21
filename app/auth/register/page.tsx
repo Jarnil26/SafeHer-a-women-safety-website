@@ -54,7 +54,7 @@ export default function RegisterPage() {
       toast({
         title: "Registration successful",
         description:
-          formData.role === "volunteer" ? "Your account is pending admin verification" : "Welcome to SafeGuard!",
+          formData.role === "volunteer" ? "Your account is pending admin verification" : "Welcome to SafeHer!",
       })
       router.push("/dashboard")
     } else {
@@ -98,7 +98,7 @@ export default function RegisterPage() {
             </div>
           </div>
           <CardTitle className="text-3xl bg-gradient-to-r from-teal-600 to-purple-600 bg-clip-text text-transparent">
-            Join SafeGuard
+            Join SafeHer
           </CardTitle>
           <CardDescription className="text-navy-600 text-lg">Create your account to get started</CardDescription>
         </CardHeader>
